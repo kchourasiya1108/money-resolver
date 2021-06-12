@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ public class Login extends AppCompatActivity {
 
     EditText email, password;
     Button loginPageBtn;
+    ImageButton imgSignUpBtn;
     FirebaseAuth fAuth;
     ProgressBar progressBar;
     @Override
@@ -32,6 +34,7 @@ public class Login extends AppCompatActivity {
         password = findViewById(R.id.passwordLogin);
         loginPageBtn = findViewById(R.id.loginBtnLogin);
         progressBar = findViewById(R.id.progressBarLogin);
+        imgSignUpBtn = findViewById(R.id.imageSignUpBtn);
         fAuth = FirebaseAuth.getInstance();
 
         loginPageBtn.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +70,13 @@ public class Login extends AppCompatActivity {
                         }
                     }
                 });
+            }
+        });
+
+        imgSignUpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), Register.class));
             }
         });
     }
