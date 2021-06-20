@@ -30,7 +30,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/grpSelection" />
+        app:layout_constraintTop_toBottomOf="@+id/grpSelection"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/addNewGrpBtn"
@@ -70,7 +71,7 @@
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addNewGrpBtn"
-        app:layout_constraintVertical_bias="0.167" />
+        app:layout_constraintVertical_bias="0.262" />
 
     <Button
         android:id="@+id/addUserToGrpBtn"
@@ -80,5 +81,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addFriend" />
+        app:layout_constraintTop_toBottomOf="@+id/addFriend"
+        app:layout_constraintVertical_bias="0.523" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

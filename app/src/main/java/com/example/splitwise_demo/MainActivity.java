@@ -7,8 +7,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -37,7 +40,10 @@ public class MainActivity extends AppCompatActivity {
     Spinner grpDropdown;
     FirebaseDatabase database;
     String uid;
-
+     ArrayList< String> spinner_grp;
+    ArrayAdapter<String> stringArrayAdapter;
+    RadioButton FriendButton ;
+    String temp;String fname;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,9 +54,8 @@ public class MainActivity extends AppCompatActivity {
         addNewUserToGrp = findViewById(R.id.addUserToGrpBtn);
         newGrpName = findViewById(R.id.newGroup);
         validUserName = findViewById(R.id.addFriend);
-        grpDropdown = findViewById(R.id.grpSelection);
+        grpDropdown =(Spinner) findViewById(R.id.grpSelection);
         database = FirebaseDatabase.getInstance();
-
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         favoritesRef.addListenerForSingleValueEvent(eventListener);
 
 
-
         addNewGrp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,25 +111,17 @@ public class MainActivity extends AppCompatActivity {
                 grps.add(grpName);
 
                 Map<String, Object> newGRP = new HashMap<>();
-                newGRP.put(Integer.toString(grps.size()-1), grps.get(grps.size()-1));
-                myRef.child("users").child(uid).child("groups").updateChildren(newGRP).addOnSuccessListener(new OnSuccessListener<Void>() {
+                newGRP.put(grps.get(grps.size()-1),Integer.toString(grps.size()-1) );
+                // myRef.child("users").child(uid).child("groups").updateChildren(newGRP);
+                myRef.child("users").child(uid).updateChildren(newGRP).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Map<String, Object> transaction = new HashMap<>();
-                        Map<String, Integer> amnt = new HashMap<>();
-                        amnt.put("ME", 45);
-                        transaction.put(name[0], amnt);
-                        myRef.child(grpName).updateChildren(transaction).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Toast.makeText(MainActivity.this, "Group Created", Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull @NotNull Exception e) {
-                                Toast.makeText(MainActivity.this, "Error in creating the grp!", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        Toast.makeText(MainActivity.this, grps.get(grps.size()-1)+" added to your group list ", Toast.LENGTH_SHORT).show();
+                         spinner_grp.clear();
+                        onrRetrive ();
+
+                        stringArrayAdapter.notifyDataSetChanged();
+
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -136,5 +132,63 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
+        spinner_grp= new ArrayList<String>();
+        stringArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,spinner_grp);
+        stringArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            grpDropdown.setAdapter(stringArrayAdapter);
+        onrRetrive ();
+
+
+        addNewUserToGrp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fname = validUserName.getText().toString().trim();
+///adding friend to a group
+
+
+                Map<String, Object> newf = new HashMap<>();
+                newf.put(fname,1);
+                DatabaseReference myRef = database.getReference();
+              System.out.print("temp");
+              temp  = grpDropdown.getSelectedItem().toString().trim();
+                myRef.child("users").child(uid).child(temp).updateChildren(newf);
+                spinner_grp.clear();
+
+
+            }
+        });
+
+
+    }
+
+
+//////to retrive data
+       public void onrRetrive (){
+           spinner_grp.clear();
+           stringArrayAdapter.notifyDataSetChanged();
+
+           DatabaseReference root = FirebaseDatabase.getInstance().getReference("users").child(uid);
+                        root.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                spinner_grp.add("Select group");
+                                for( DataSnapshot ds : snapshot.getChildren()){
+                                    String k = ds.getKey().toString().trim();
+                                    if(k.equals("fullname")||k.equals("email")){
+                                        continue;
+                                    }
+                                    else{
+                                   spinner_grp.add(k);
+                                    }
+                                }
+                                stringArrayAdapter.notifyDataSetChanged();
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                            }
+                        });
     }
 }
+

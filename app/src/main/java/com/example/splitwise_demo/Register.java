@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -19,8 +21,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.NotNull;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -56,6 +61,7 @@ public class Register extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         fAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
+     //   spinner_grp= new ArrayList<String>();
 
         if(fAuth.getCurrentUser()!=null){
             startActivity(new Intent(getApplicationContext(),MainActivity.class));
@@ -93,6 +99,12 @@ public class Register extends AppCompatActivity {
                             DatabaseReference myRef = database.getReference();
                             myRef.child("users").child(uid).child("fullname").setValue(name);
                             myRef.child("users").child(uid).child("email").setValue(emailVal);
+
+
+
+
+
+
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         }
                         else {
