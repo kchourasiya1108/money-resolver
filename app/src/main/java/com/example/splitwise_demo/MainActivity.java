@@ -173,6 +173,8 @@ public class MainActivity extends AppCompatActivity {
                         root.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                spinner_grp.clear();
+
                                 spinner_grp.add("Select group");
                                 for( DataSnapshot ds : snapshot.getChildren()){
                                     String k = ds.getKey().toString().trim();
