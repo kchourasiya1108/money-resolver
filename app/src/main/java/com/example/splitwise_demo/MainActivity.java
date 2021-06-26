@@ -5,19 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,7 +21,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.NotNull;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,19 +30,19 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "Main Activity";
-    Button logout, addNewGrp, addNewUserToGrp , addexpense;
+    Button logout, addNewGrp, addNewUserToGrp, addexpense;
     EditText newGrpName, validUserName;
     Spinner grpDropdown;
     FirebaseDatabase database;
     String uid;
-     ArrayList< String> spinner_grp;
+    ArrayList< String> spinner_grp;
     ArrayAdapter<String> stringArrayAdapter;
-    RadioButton FriendButton ;
-    String temp;String fname;
+    String temp, fname;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         addexpense = findViewById(R.id.addexpense);
         logout = findViewById(R.id.logoutBtn);
         addNewGrp = findViewById(R.id.addNewGrpBtn);
@@ -107,9 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //if present do not create flag error
                 //else make one
-
                 grps.add(grpName);
-
                 Map<String, Object> newGRP = new HashMap<>();
                 newGRP.put(grps.get(grps.size()-1),Integer.toString(grps.size()-1) );
                 // myRef.child("users").child(uid).child("groups").updateChildren(newGRP);
@@ -117,11 +110,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void unused) {
                         Toast.makeText(MainActivity.this, grps.get(grps.size()-1)+" added to your group list ", Toast.LENGTH_SHORT).show();
-                         spinner_grp.clear();
-                        onrRetrive ();
-
+                        spinner_grp.clear();
+                        onrRetrieve();
                         stringArrayAdapter.notifyDataSetChanged();
-
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -140,63 +131,58 @@ public class MainActivity extends AppCompatActivity {
 
              }
          });
+
+
         spinner_grp= new ArrayList<String>();
         stringArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,spinner_grp);
         stringArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            grpDropdown.setAdapter(stringArrayAdapter);
-        onrRetrive ();
-
+        grpDropdown.setAdapter(stringArrayAdapter);
+        onrRetrieve();
 
         addNewUserToGrp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fname = validUserName.getText().toString().trim();
-///adding friend to a group
-
-
+                //adding friend to a group
                 Map<String, Object> newf = new HashMap<>();
-                newf.put(fname,1);
+                newf.put(fname,0);
                 DatabaseReference myRef = database.getReference();
                 System.out.print("temp");
-               temp  = grpDropdown.getSelectedItem().toString().trim();
+                temp  = grpDropdown.getSelectedItem().toString().trim();
                 myRef.child("users").child(uid).child(temp).updateChildren(newf);
                 spinner_grp.clear();
-
-
             }
         });
-
-
     }
 
 
-//////to retrive data
-       public void onrRetrive (){
-           spinner_grp.clear();
-           stringArrayAdapter.notifyDataSetChanged();
+    // to retrieve data
+    public void onrRetrieve(){
+        spinner_grp.clear();
+        stringArrayAdapter.notifyDataSetChanged();
 
-           DatabaseReference root = FirebaseDatabase.getInstance().getReference("users").child(uid);
-                        root.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                spinner_grp.clear();
+        DatabaseReference root = FirebaseDatabase.getInstance().getReference("users").child(uid);
+        root.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                spinner_grp.clear();
+                spinner_grp.add("Select group");
+                for( DataSnapshot ds : snapshot.getChildren()){
+                    String k = ds.getKey().toString().trim();
+                    if(k.equals("fullname")||k.equals("email")){
+                        continue;
+                    }
+                    else{
+                        spinner_grp.add(k);
+                    }
+                }
+                stringArrayAdapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                                spinner_grp.add("Select group");
-                                for( DataSnapshot ds : snapshot.getChildren()){
-                                    String k = ds.getKey().toString().trim();
-                                    if(k.equals("fullname")||k.equals("email")){
-                                        continue;
-                                    }
-                                    else{
-                                   spinner_grp.add(k);
-                                    }
-                                }
-                                stringArrayAdapter.notifyDataSetChanged();
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                            }
-                        });
+            }
+        });
     }
 }
 

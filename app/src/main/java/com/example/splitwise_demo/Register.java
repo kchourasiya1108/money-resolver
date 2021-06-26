@@ -61,7 +61,7 @@ public class Register extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         fAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
-     //   spinner_grp= new ArrayList<String>();
+//        spinner_grp= new ArrayList<String>();
 
         if(fAuth.getCurrentUser()!=null){
             startActivity(new Intent(getApplicationContext(),MainActivity.class));
@@ -73,8 +73,6 @@ public class Register extends AppCompatActivity {
                 emailVal = email.getText().toString().trim();
                 passVal = password.getText().toString().trim();
                 name  = fullName.getText().toString();
-
-
 
                 if(TextUtils.isEmpty(emailVal)){
                     email.setError("Email is Required");
@@ -99,12 +97,6 @@ public class Register extends AppCompatActivity {
                             DatabaseReference myRef = database.getReference();
                             myRef.child("users").child(uid).child("fullname").setValue(name);
                             myRef.child("users").child(uid).child("email").setValue(emailVal);
-
-
-
-
-
-
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         }
                         else {
@@ -113,8 +105,6 @@ public class Register extends AppCompatActivity {
                         }
                     }
                 });
-
-
             }
         });
 
