@@ -35,7 +35,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "Main Activity";
-    Button logout, addNewGrp, addNewUserToGrp;
+    Button logout, addNewGrp, addNewUserToGrp , addexpense;
     EditText newGrpName, validUserName;
     Spinner grpDropdown;
     FirebaseDatabase database;
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        addexpense = findViewById(R.id.addexpense);
         logout = findViewById(R.id.logoutBtn);
         addNewGrp = findViewById(R.id.addNewGrpBtn);
         addNewUserToGrp = findViewById(R.id.addUserToGrpBtn);
@@ -133,7 +133,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+         addexpense.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 startActivity(new Intent(getApplicationContext(), expenseadd.class));
 
+             }
+         });
         spinner_grp= new ArrayList<String>();
         stringArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,spinner_grp);
         stringArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -151,8 +157,8 @@ public class MainActivity extends AppCompatActivity {
                 Map<String, Object> newf = new HashMap<>();
                 newf.put(fname,1);
                 DatabaseReference myRef = database.getReference();
-              System.out.print("temp");
-              temp  = grpDropdown.getSelectedItem().toString().trim();
+                System.out.print("temp");
+               temp  = grpDropdown.getSelectedItem().toString().trim();
                 myRef.child("users").child(uid).child(temp).updateChildren(newf);
                 spinner_grp.clear();
 
