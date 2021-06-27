@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(Void unused) {
                         Toast.makeText(MainActivity.this, grps.get(grps.size()-1)+" added to your group list ", Toast.LENGTH_SHORT).show();
                         spinner_grp.clear();
-                        onrRetrieve();
+                        onRetrieve();
                         stringArrayAdapter.notifyDataSetChanged();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         stringArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,spinner_grp);
         stringArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         grpDropdown.setAdapter(stringArrayAdapter);
-        onrRetrieve();
+        onRetrieve();
 
         addNewUserToGrp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // to retrieve data
-    public void onrRetrieve(){
+    public void onRetrieve(){
         spinner_grp.clear();
         stringArrayAdapter.notifyDataSetChanged();
 
