@@ -97,7 +97,7 @@ public class expenseadd extends AppCompatActivity {
                         }
                         else {
                             int x = ((Number)task.getResult().getValue()).intValue();
-                            x = x + value1;
+                            x = x - value1;
                             Map<String, Object> updateAmnt = new HashMap<>();
                             updateAmnt.put(friend1_name, x);
                             root1.updateChildren(updateAmnt);
@@ -113,7 +113,7 @@ public class expenseadd extends AppCompatActivity {
                         }
                         else {
                             int x = ((Number)task.getResult().getValue()).intValue();
-                            x = x - value1;
+                            x = x + value1;
                             Map<String, Object> updateAmnt = new HashMap<>();
                             updateAmnt.put(friend2_name, x);
                             root1.updateChildren(updateAmnt);

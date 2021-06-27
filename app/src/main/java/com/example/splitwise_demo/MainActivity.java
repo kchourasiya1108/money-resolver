@@ -30,7 +30,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "Main Activity";
-    Button logout, addNewGrp, addNewUserToGrp, addexpense;
+    Button logout, addNewGrp, addNewUserToGrp, addexpense, resolve;
     EditText newGrpName, validUserName;
     Spinner grpDropdown;
     FirebaseDatabase database;
@@ -50,7 +50,10 @@ public class MainActivity extends AppCompatActivity {
         newGrpName = findViewById(R.id.newGroup);
         validUserName = findViewById(R.id.addFriend);
         grpDropdown =(Spinner) findViewById(R.id.grpSelection);
+        resolve = findViewById(R.id.resolve);
+
         database = FirebaseDatabase.getInstance();
+
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,6 +62,14 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        resolve.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), resolvedList.class));
+            }
+        });
+
 
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
