@@ -2,13 +2,17 @@ package com.example.splitwise_demo;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -24,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
@@ -35,9 +40,11 @@ public class resolvedList extends AppCompatActivity {
     String uid;
     ArrayList< String> spinner_grp;
     ArrayAdapter<String> stringArrayAdapter;
-
+    final_list_adaptar final_list_adaptar;
     Map<String, Integer> data = new HashMap<>();
-
+    RecyclerView recylerview;
+    LinearLayoutManager linearLayoutManager;
+    List<itemshow_help_class> list;
 
     // original
     PriorityQueue<Pair<Integer, String>> neg = new PriorityQueue<>( 11,new Comparator<Pair<Integer, String>>() {
@@ -102,7 +109,8 @@ public class resolvedList extends AppCompatActivity {
 
                         // NOW HAVE TO IMPLEMENT RECYCLER VIEW
 
-
+                        initData();
+                        initRecyclerView();
 
                     }
                     @Override
@@ -115,6 +123,28 @@ public class resolvedList extends AppCompatActivity {
             }
         });
 
+    }
+    public void initData(){
+    list = new ArrayList<>();
+
+        for (int i = 0; i < ans.size(); i++){
+
+                 list.add( new itemshow_help_class( ans.get(i).first+" pays "+ ans.get(i).second.second+" to "+ans.get(i).second.first));
+        }
+
+
+
+
+    }
+    public void initRecyclerView(){
+        recylerview =findViewById(R.id.recylerview);
+
+        linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
+        recylerview.setLayoutManager(linearLayoutManager);
+        final_list_adaptar = new final_list_adaptar(list);
+        recylerview.setAdapter(final_list_adaptar);
+        final_list_adaptar.notifyDataSetChanged();
     }
 
     public void finalAns(){
