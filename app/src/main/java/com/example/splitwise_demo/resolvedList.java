@@ -129,7 +129,7 @@ public class resolvedList extends AppCompatActivity {
 
         for (int i = 0; i < ans.size(); i++){
 
-                 list.add( new itemshow_help_class( "* "+ans.get(i).first+" pays "+ ans.get(i).second.second+" to "+ans.get(i).second.first));
+                 list.add( new itemshow_help_class( "* "+ans.get(i).first+" pays "+"Rs. " +ans.get(i).second.second+" to "+ans.get(i).second.first));
         }
 
 
