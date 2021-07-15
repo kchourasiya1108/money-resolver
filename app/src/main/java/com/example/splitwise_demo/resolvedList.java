@@ -103,7 +103,7 @@ public class resolvedList extends AppCompatActivity {
                         }
                         finalAns();
 //                        print();    // For printing the map to check if data is fetched correctly
-                        showOnapp();    // For printing the arrayLis to check the resolved amounts
+                     //   showOnapp();    // For printing the arrayLis to check the resolved amounts
 
 
 
@@ -129,7 +129,7 @@ public class resolvedList extends AppCompatActivity {
 
         for (int i = 0; i < ans.size(); i++){
 
-                 list.add( new itemshow_help_class( ans.get(i).first+" pays "+ ans.get(i).second.second+" to "+ans.get(i).second.first));
+                 list.add( new itemshow_help_class( "* "+ans.get(i).first+" pays "+ ans.get(i).second.second+" to "+ans.get(i).second.first));
         }
 
 
@@ -151,7 +151,8 @@ public class resolvedList extends AppCompatActivity {
         for (Map.Entry<String,Integer> entry : data.entrySet()){
             if(entry.getValue()<0){
                 neg.add(new Pair <> (entry.getValue(), entry.getKey()));
-            }else{
+            }
+            else if(entry.getValue()>0){
                 pos.add(new Pair <> ((-1)*entry.getValue(), entry.getKey()));
             }
         }
@@ -195,9 +196,9 @@ public class resolvedList extends AppCompatActivity {
 
     public void showOnapp(){
         for (int i = 0; i < ans.size(); i++){
-            Toast.makeText(resolvedList.this,
-                    ans.get(i).first+" pays "+ ans.get(i).second.second+" to "+ans.get(i).second.first,
-                    Toast.LENGTH_SHORT).show();
+         //   Toast.makeText(resolvedList.this,
+           //         ans.get(i).first+" pays "+ ans.get(i).second.second+" to "+ans.get(i).second.first,
+             //       Toast.LENGTH_SHORT).show();
         }
     }
 

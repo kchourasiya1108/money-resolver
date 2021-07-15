@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         stringArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         grpDropdown.setAdapter(stringArrayAdapter);
         onRetrieve();
-
+//adding new user
         addNewUserToGrp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
     public void onRetrieve(){
         spinner_grp.clear();
         stringArrayAdapter.notifyDataSetChanged();
-
+//iteration int group via datasnapshot
         DatabaseReference root = FirebaseDatabase.getInstance().getReference("users").child(uid);
         root.addValueEventListener(new ValueEventListener() {
             @Override
