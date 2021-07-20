@@ -3,7 +3,6 @@ package com.example.splitwise_demo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -27,55 +26,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
-
-    private static final String TAG = "Main Activity";
-    Button logout, addNewGrp, addNewUserToGrp, addexpense, resolve;
-    EditText newGrpName, validUserName;
-    Spinner grpDropdown;
+public class AddNewGroup extends AppCompatActivity {
+    Button addNewGrp;
+    EditText newGrpName;
     FirebaseDatabase database;
     String uid;
     ArrayList< String> spinner_grp;
     ArrayAdapter<String> stringArrayAdapter;
-    String temp, fname;
+    Spinner grpDropdown;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        addexpense = findViewById(R.id.addexpense);
-        logout = findViewById(R.id.logoutBtn);
+        setContentView(R.layout.activity_add_new_group);
         addNewGrp = findViewById(R.id.addNewGrpBtn);
-        addNewUserToGrp = findViewById(R.id.addUserToGrpBtn);
         newGrpName = findViewById(R.id.newGroup);
-        validUserName = findViewById(R.id.addFriend);
         grpDropdown =(Spinner) findViewById(R.id.grpSelection);
-        resolve = findViewById(R.id.resolve);
-
         database = FirebaseDatabase.getInstance();
-
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getApplicationContext(), Login.class));
-                finish();
-            }
-        });
-
-        resolve.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), resolvedList.class));
-            }
-        });
-
-
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         List<String> grps= new ArrayList<String>();
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference favoritesRef = rootRef.child("users").child(uid).child("groups");
+        spinner_grp= new ArrayList<String>();
+        stringArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,spinner_grp);
+        stringArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //grpDropdown.setAdapter(stringArrayAdapter);
+        onRetrieve();
         ValueEventListener eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -90,14 +66,8 @@ public class MainActivity extends AppCompatActivity {
         };
         favoritesRef.addListenerForSingleValueEvent(eventListener);
 
+
         addNewGrp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, AddNewGroup.class);
-                startActivity(i);
-            }
-        });
-        /*addNewGrp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DatabaseReference myRef = database.getReference();
@@ -126,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 myRef.child("users").child(uid).updateChildren(newGRP).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Toast.makeText(MainActivity.this, grps.get(grps.size()-1)+" added to your group list ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddNewGroup.this, grps.get(grps.size()-1)+" added to your group list ", Toast.LENGTH_SHORT).show();
                         spinner_grp.clear();
                         onRetrieve();
                         stringArrayAdapter.notifyDataSetChanged();
@@ -134,48 +104,18 @@ public class MainActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull @NotNull Exception e) {
-                        Toast.makeText(MainActivity.this, "Error in adding grpname to DB!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddNewGroup.this, "Error in adding grpname to DB!", Toast.LENGTH_SHORT).show();
                     }
                 });
 
             }
-        });*/
-
-         addexpense.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 startActivity(new Intent(getApplicationContext(), expenseadd.class));
-
-             }
-         });
-
-
-        spinner_grp= new ArrayList<String>();
-        stringArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,spinner_grp);
-        stringArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //grpDropdown.setAdapter(stringArrayAdapter);
-        onRetrieve();
-//adding new user
-        addNewUserToGrp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /*fname = validUserName.getText().toString().trim();
-                //adding friend to a group
-                Map<String, Object> newf = new HashMap<>();
-                newf.put(fname,0);
-                DatabaseReference myRef = database.getReference();
-                System.out.print("temp");
-                temp  = grpDropdown.getSelectedItem().toString().trim();
-                myRef.child("users").child(uid).child(temp).updateChildren(newf);
-                spinner_grp.clear();*/
-                Intent i = new Intent(MainActivity.this, AddNewUser.class);
-                startActivity(i);
-            }
         });
+
+
+
+
+
     }
-
-
-    // to retrieve data
     public void onRetrieve(){
         spinner_grp.clear();
         stringArrayAdapter.notifyDataSetChanged();
@@ -204,4 +144,3 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 }
-
